@@ -1,0 +1,6 @@
+{
+  "name": "William & Co. Advocates",
+  "description": "Elegant corporate law firm website and admin portal based in Ruiru, Kenya.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

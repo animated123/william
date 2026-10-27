@@ -1,0 +1,24 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-blue: #1D3268;
+  --color-brand-gold: #D4AF37;
+  --color-brand-gold-light: #C5A059;
+  --color-brand-navy: #0A1128;
+  --color-brand-light: #F9FAFC;
+}
+
+@layer base {
+  body {
+    @apply bg-brand-light text-brand-navy font-sans antialiased;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-brand-blue text-white px-6 py-2 rounded-sm font-medium transition-all hover:bg-brand-navy active:scale-95;
+  }
+  .btn-secondary {
+    @apply border-2 border-brand-gold text-brand-gold px-6 py-2 rounded-sm font-medium transition-all hover:bg-brand-gold hover:text-white active:scale-95;
+  }
+}
