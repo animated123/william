@@ -74,9 +74,12 @@ const Navbar = () => {
       }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center">
-            <Link to="/" className="flex flex-col">
-              <span className="text-2xl font-serif font-bold tracking-tight text-brand-gold uppercase leading-tight">William & Co.</span>
-              <span className="text-[10px] tracking-[0.4em] font-medium opacity-60 text-brand-blue">ADVOCATES</span>
+            <Link to="/" className="flex items-center gap-3 group">
+              <img src="/images/favicon.png" alt="William & Co. Advocates" className="h-10 w-auto object-contain transition-transform group-hover:scale-105" />
+              <div className="flex flex-col">
+                <span className="text-2xl font-serif font-bold tracking-tight text-brand-gold uppercase leading-tight">William & Co.</span>
+                <span className="text-[10px] tracking-[0.4em] font-medium opacity-60 text-brand-blue">ADVOCATES</span>
+              </div>
             </Link>
             
             <div className="hidden lg:flex space-x-10 items-center font-bold text-xs uppercase tracking-widest text-brand-navy">
@@ -140,9 +143,12 @@ const Footer = () => {
     <footer className="bg-brand-navy text-white py-6 border-t border-brand-gold/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
-          <Link to="/" className="flex flex-col">
-            <span className="text-base font-serif font-bold text-brand-gold uppercase leading-tight">William & Co.</span>
-            <span className="text-[7px] tracking-[0.4em] font-medium opacity-60 text-white">ADVOCATES</span>
+          <Link to="/" className="flex items-center gap-2">
+            <img src="/images/favicon.png" alt="William & Co." className="h-6 w-auto object-contain brightness-110" />
+            <div className="flex flex-col">
+              <span className="text-base font-serif font-bold text-brand-gold uppercase leading-tight">William & Co.</span>
+              <span className="text-[7px] tracking-[0.4em] font-medium opacity-60 text-white">ADVOCATES</span>
+            </div>
           </Link>
           
           <div className="flex gap-x-4 text-[9px] font-bold uppercase tracking-widest text-white/50">

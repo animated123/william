@@ -29,6 +29,11 @@ async function createServer() {
     );
   }
 
+  // Static Assets (Favicon, images, public directory)
+  app.use('/images', express.static(path.resolve(baseDir, 'public/images')));
+  app.use('/images', express.static(path.resolve(baseDir, 'images')));
+  app.use(express.static(path.resolve(baseDir, 'public')));
+
   // API Routes
   app.get('/api/health', (req, res) => {
     res.json({ status: 'ok', firm: 'William & Co. Advocates' });
