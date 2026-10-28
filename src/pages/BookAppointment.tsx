@@ -6,17 +6,17 @@ import { Calendar, Clock, ShieldCheck, MapPin } from 'lucide-react';
 export const BookAppointmentPage = () => {
   return (
     <div className="bg-brand-light min-h-screen">
-      <section className="bg-brand-navy py-24 text-center">
+      <section className="bg-brand-navy pt-10 pb-16 md:pt-12 md:pb-20 text-center">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-4xl md:text-6xl font-serif font-bold text-white mb-6"
+            className="text-4xl md:text-5xl font-serif font-bold text-white mb-4"
           >
             Secure Your Consultation
           </motion.h1>
-          <div className="w-24 h-1 bg-brand-gold mx-auto mb-6" />
-          <p className="text-white/70 max-w-2xl mx-auto text-lg">
+          <div className="w-20 h-1 bg-brand-gold mx-auto mb-4" />
+          <p className="text-white/70 max-w-2xl mx-auto text-base">
             Professional legal guidance starts with a conversation. Choose a time that works for you.
           </p>
         </div>

@@ -58,17 +58,13 @@ export const HomePage = () => {
           />
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 text-center py-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 text-center py-14 md:py-16">
           <motion.div 
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1 }}
             className="text-white max-w-4xl mx-auto"
           >
-            <div className="inline-flex items-center space-x-2 text-brand-gold mb-6 bg-brand-gold/10 px-4 py-1 rounded-full border border-brand-gold/20">
-              <Award size={14} />
-              <span className="uppercase tracking-[0.3em] text-[9px] font-bold">Excellence & Integrity</span>
-            </div>
             <h1 className="text-5xl md:text-7xl font-serif font-bold leading-tight mb-8">
               Redefining <span className="text-brand-gold italic font-light">Legal Advocacy</span>
             </h1>

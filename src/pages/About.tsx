@@ -1,22 +1,23 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { Award, CheckCircle2, Shield, Users, Target, Landmark } from 'lucide-react';
+import { FAQSection } from '../components/FAQSection';
 
 export const AboutPage = () => {
   return (
     <div className="bg-white">
       {/* Header */}
-      <section className="bg-brand-navy py-24 text-center">
+      <section className="bg-brand-navy pt-10 pb-12 md:pt-12 md:pb-14 text-center">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-4xl md:text-6xl font-serif font-bold text-white mb-6"
+            className="text-4xl md:text-5xl font-serif font-bold text-white mb-4"
           >
             About Our Firm
           </motion.h1>
-          <div className="w-24 h-1 bg-brand-gold mx-auto mb-6" />
-          <p className="text-white/70 max-w-2xl mx-auto text-lg uppercase tracking-widest font-medium">
+          <div className="w-20 h-1 bg-brand-gold mx-auto mb-4" />
+          <p className="text-white/70 max-w-2xl mx-auto text-base uppercase tracking-widest font-medium">
             Integrity • Excellence • Client Advocacy
           </p>
         </div>
@@ -123,6 +124,12 @@ export const AboutPage = () => {
           </div>
         </div>
       </section>
+
+      {/* Accordion FAQ Section */}
+      <FAQSection 
+        title="Frequently Asked Legal Questions" 
+        subtitle="Common questions regarding our firm, practice, and the Kenyan legal process."
+      />
     </div>
   );
 };

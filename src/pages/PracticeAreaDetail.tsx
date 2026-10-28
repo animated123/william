@@ -6,9 +6,11 @@ import { motion } from 'motion/react';
 import { 
   Briefcase, Home, Users, Lightbulb, ShieldCheck, 
   Receipt, Scale, Gavel, HeartHandshake, Landmark, 
-  Heart, ArrowRight, BookOpen, CheckCircle2, Info, Award
+  Heart, ArrowRight, BookOpen, CheckCircle2, Info, Award,
+  AlertCircle, FileText, ChevronRight
 } from 'lucide-react';
 import { AppointmentForm } from '../components/AppointmentForm';
+import { getRealCaseScenarios, CaseScenario } from '../lib/caseScenariosData';
 
 interface PracticeArea {
   id: string;
@@ -17,7 +19,7 @@ interface PracticeArea {
   description: string;
   icon: string;
   statutoryFramework: string;
-  caseScenarios: string;
+  caseScenarios: any;
 }
 
 const IconMap: Record<string, any> = {
@@ -66,12 +68,12 @@ export const PracticeAreaDetailPage = () => {
   return (
     <div className="bg-white min-h-screen">
       {/* Hero */}
-      <section className="bg-brand-navy py-32 relative overflow-hidden">
+      <section className="bg-brand-navy pt-8 pb-14 md:pt-10 md:pb-16 relative overflow-hidden">
         <div className="absolute inset-0 opacity-10 pointer-events-none">
           <IconComponent className="absolute -right-20 -top-20 text-white" size={400} strokeWidth={1} />
         </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <Link to="/practice-areas" className="text-brand-gold text-xs uppercase tracking-widest font-bold flex items-center gap-2 mb-8 hover:-translate-x-2 transition-transform">
+          <Link to="/practice-areas" className="text-brand-gold text-xs uppercase tracking-widest font-bold flex items-center gap-2 mb-6 hover:-translate-x-2 transition-transform">
             <ArrowRight className="rotate-180" size={14} /> Back to Expertise
           </Link>
           <motion.div 
@@ -123,12 +125,76 @@ export const PracticeAreaDetailPage = () => {
 
               {/* Case Scenarios */}
               <div className="space-y-8">
-                <h3 className="text-2xl font-serif font-bold text-brand-navy">Practical Case Scenarios</h3>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {area.caseScenarios.split(',').map((scenario, i) => (
-                    <div key={i} className="p-6 border border-gray-100 shadow-sm hover:shadow-md transition-shadow flex gap-4">
-                      <CheckCircle2 className="text-green-500 shrink-0" size={20} />
-                      <span className="text-sm text-gray-700 leading-relaxed">{scenario.trim()}</span>
+                <div className="border-b border-gray-100 pb-4">
+                  <div className="flex items-center gap-2 text-brand-gold font-bold text-[10px] uppercase tracking-widest mb-1">
+                    <span className="w-2 h-2 rounded-full bg-brand-gold"></span>
+                    Proven Legal Precedents & Strategy
+                  </div>
+                  <h3 className="text-2xl md:text-3xl font-serif font-bold text-brand-navy">Practical Case Scenarios</h3>
+                  <p className="text-gray-500 text-sm mt-1">
+                    Authentic client matters handled within Kenyan jurisdiction, demonstrating our strategic path from dispute to enforceable resolution.
+                  </p>
+                </div>
+
+                <div className="space-y-6">
+                  {getRealCaseScenarios(area).map((item, i) => (
+                    <div 
+                      key={i} 
+                      className="bg-white border border-gray-100 rounded-sm shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden"
+                    >
+                      {/* Scenario Header */}
+                      <div className="bg-brand-light/70 p-6 border-b border-gray-100 flex flex-col md:flex-row md:items-center justify-between gap-3">
+                        <div className="flex items-start md:items-center gap-3">
+                          <span className="px-2.5 py-1 bg-brand-navy text-brand-gold text-[10px] font-bold uppercase tracking-wider rounded-sm shrink-0">
+                            Matter 0{i + 1}
+                          </span>
+                          <h4 className="text-lg font-serif font-bold text-brand-navy leading-snug">
+                            {item.title}
+                          </h4>
+                        </div>
+                        {item.statute && (
+                          <div className="inline-flex items-center gap-1.5 text-[11px] font-medium text-brand-navy/70 bg-white px-3 py-1 border border-gray-200/80 rounded-sm shrink-0">
+                            <BookOpen size={12} className="text-brand-gold shrink-0" />
+                            <span className="truncate max-w-[280px]">{item.statute}</span>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Scenario Narrative Grid */}
+                      <div className="p-6 md:p-8 space-y-6">
+                        {/* 1. Client Challenge */}
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-amber-700">
+                            <AlertCircle size={15} />
+                            <span>The Challenge / Matter</span>
+                          </div>
+                          <p className="text-sm text-gray-600 leading-relaxed pl-6 border-l-2 border-amber-200">
+                            {item.context}
+                          </p>
+                        </div>
+
+                        {/* 2. Legal Strategy & Action */}
+                        <div className="space-y-2">
+                          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-brand-blue">
+                            <Scale size={15} />
+                            <span>Our Legal Intervention & Strategy</span>
+                          </div>
+                          <p className="text-sm text-gray-600 leading-relaxed pl-6 border-l-2 border-brand-blue/30">
+                            {item.action}
+                          </p>
+                        </div>
+
+                        {/* 3. Resolution & Outcome */}
+                        <div className="bg-emerald-50/60 p-4 border border-emerald-100 rounded-sm space-y-1">
+                          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-emerald-800">
+                            <CheckCircle2 size={16} className="text-emerald-600" />
+                            <span>Enforceable Resolution & Outcome</span>
+                          </div>
+                          <p className="text-sm text-emerald-950 font-medium leading-relaxed pl-6">
+                            {item.outcome}
+                          </p>
+                        </div>
+                      </div>
                     </div>
                   ))}
                 </div>

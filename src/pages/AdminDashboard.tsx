@@ -13,6 +13,8 @@ import {
   Briefcase, BookOpen, User as UserIcon, Mail, Phone,
   Menu, ExternalLink, Globe
 } from 'lucide-react';
+import { getTeamSlug, DEFAULT_TEAM_MEMBERS } from '../lib/teamUtils';
+import { REAL_PRACTICE_SCENARIOS } from '../lib/caseScenariosData';
 
 // --- Types ---
 interface PracticeArea {
@@ -22,7 +24,7 @@ interface PracticeArea {
   description: string;
   icon: string;
   statutoryFramework: string;
-  caseScenarios: string;
+  caseScenarios: any;
 }
 
 interface TeamMember {
@@ -33,6 +35,7 @@ interface TeamMember {
   imageUrl: string;
   credentials: string;
   order: number;
+  slug?: string;
 }
 
 interface BlogPost {
@@ -345,7 +348,7 @@ export const AdminDashboard = () => {
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <button 
-                    onClick={() => { setActiveTab('team'); setIsEditing('new'); setEditData({ name: '', role: '', bio: '', credentials: '', imageUrl: '', order: team.length + 1 }); }}
+                    onClick={() => { setActiveTab('team'); setIsEditing('new'); setEditData({ name: '', role: '', bio: '', credentials: '', imageUrl: '', order: team.length + 1, slug: '' }); }}
                     className="flex flex-col items-center justify-center p-6 border-2 border-dashed border-gray-100 rounded-sm hover:border-brand-gold hover:bg-brand-gold/5 transition-all group"
                   >
                     <Users className="text-brand-gold mb-3 group-hover:scale-110 transition-transform" size={32} />
@@ -495,13 +498,32 @@ export const AdminDashboard = () => {
                     onChange={e => setEditData({ ...editData, statutoryFramework: e.target.value })}
                   />
                 </div>
-                <div className="space-y-1">
-                  <label className="text-[10px] font-bold uppercase text-gray-400">Case Scenarios (Comma separated)</label>
-                  <input 
-                    className="w-full p-3 bg-brand-light border-none outline-none focus:ring-1 focus:ring-brand-gold text-sm"
-                    value={editData.caseScenarios}
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <label className="text-[10px] font-bold uppercase text-gray-400">Practical Case Scenarios (JSON or Text)</label>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const preset = REAL_PRACTICE_SCENARIOS[editData.slug];
+                        if (preset) {
+                          setEditData({ ...editData, caseScenarios: JSON.stringify(preset, null, 2) });
+                        }
+                      }}
+                      className="text-[9px] uppercase tracking-wider font-bold text-brand-gold hover:underline"
+                    >
+                      Load Real Precedents Preset
+                    </button>
+                  </div>
+                  <textarea 
+                    rows={6}
+                    className="w-full p-3 bg-brand-light border-none outline-none focus:ring-1 focus:ring-brand-gold text-xs font-mono"
+                    value={typeof editData.caseScenarios === 'object' ? JSON.stringify(editData.caseScenarios, null, 2) : editData.caseScenarios}
                     onChange={e => setEditData({ ...editData, caseScenarios: e.target.value })}
+                    placeholder='[ { "title": "...", "context": "...", "statute": "...", "action": "...", "outcome": "..." } ]'
                   />
+                  <p className="text-[10px] text-gray-400">
+                    Supports JSON array of scenario objects or text. Realistic Kenyan legal scenarios are displayed on the public service page.
+                  </p>
                 </div>
                 <div className="flex gap-4 pt-4 border-t border-gray-100">
                   <button onClick={() => handleSave('practice_areas')} className="btn-primary flex items-center gap-2"><Save size={16} /> Save Changes</button>
@@ -536,7 +558,7 @@ export const AdminDashboard = () => {
             <div className="flex justify-between items-center bg-white p-4 border border-gray-100 shadow-sm">
               <h2 className="text-lg font-serif font-bold text-brand-navy">Advocate Roster</h2>
               <button 
-                onClick={() => { setIsEditing('new'); setEditData({ name: '', role: '', bio: '', credentials: '', imageUrl: '', order: team.length + 1 }); }}
+                onClick={() => { setIsEditing('new'); setEditData({ name: '', role: '', bio: '', credentials: '', imageUrl: '', order: team.length + 1, slug: '' }); }}
                 className="btn-primary flex items-center gap-2 text-[10px]"
               >
                 <Plus size={14} /> ADD MEMBER
@@ -551,7 +573,15 @@ export const AdminDashboard = () => {
                     <input 
                       className="w-full p-3 bg-brand-light border-none outline-none focus:ring-1 focus:ring-brand-gold text-sm"
                       value={editData.name}
-                      onChange={e => setEditData({ ...editData, name: e.target.value })}
+                      onChange={e => {
+                        const nameVal = e.target.value;
+                        const autoSlug = nameVal.toLowerCase().trim().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '');
+                        setEditData({ 
+                          ...editData, 
+                          name: nameVal, 
+                          slug: editData.slug ? editData.slug : autoSlug 
+                        });
+                      }}
                     />
                   </div>
                   <div className="space-y-1">
@@ -563,6 +593,21 @@ export const AdminDashboard = () => {
                     />
                   </div>
                 </div>
+
+                <div className="space-y-1">
+                  <label className="text-[10px] font-bold uppercase text-gray-400">URL Path Slug (e.g. william_mbugua)</label>
+                  <div className="flex items-center bg-brand-light px-3 py-2 text-sm rounded-sm">
+                    <span className="text-gray-400 select-none text-xs">/team/</span>
+                    <input 
+                      className="flex-1 bg-transparent border-none outline-none font-mono text-xs text-brand-navy"
+                      value={editData.slug || ''}
+                      onChange={e => setEditData({ ...editData, slug: e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, '') })}
+                      placeholder="william_mbugua"
+                    />
+                  </div>
+                  <p className="text-[9px] text-gray-400">Public profile will be located at /team/{editData.slug || 'member_name'}</p>
+                </div>
+
                 <div className="space-y-1">
                   <label className="text-[10px] font-bold uppercase text-gray-400">Academic Credentials (e.g. LLB, LLM)</label>
                   <input 
@@ -610,6 +655,14 @@ export const AdminDashboard = () => {
                         <h3 className="font-serif font-bold text-brand-navy text-sm truncate">{member.name}</h3>
                         <p className="text-[9px] uppercase font-bold text-brand-gold tracking-widest mb-1">{member.role}</p>
                         <p className="text-[10px] text-gray-400 truncate">{member.credentials}</p>
+                        <a 
+                          href={`/team/${getTeamSlug(member)}`} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 text-[10px] font-bold text-brand-blue hover:text-brand-gold transition-colors mt-2"
+                        >
+                          /team/{getTeamSlug(member)} <ExternalLink size={10} />
+                        </a>
                       </div>
                       <div className="flex justify-end gap-1 mt-4">
                         <button onClick={() => { setIsEditing(member.id); setEditData(member); }} className="p-2 text-brand-blue hover:bg-brand-light rounded-sm transition-colors" title="Edit"><Edit2 size={14} /></button>

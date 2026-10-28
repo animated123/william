@@ -4,21 +4,43 @@ import { collection, doc, setDoc, serverTimestamp } from 'firebase/firestore';
 const teamMembers = [
   {
     id: 'partner-1',
-    name: 'William Ngugi',
+    slug: 'william_mbugua',
+    name: 'William Mbugua',
     role: 'Managing Partner',
     credentials: 'LL.B Hons (MKU), Dip. KSL, Commissioner for Oaths, Notary Public',
-    bio: 'With over 15 years of experience in corporate law and property conveyancing, William leads the firm with a commitment to integrity and excellence.',
+    bio: 'William Mbugua is the Managing Partner with extensive experience guiding corporations, boards, and high-net-worth clients through complex legal challenges. He specializes in high-stakes negotiations, enterprise risk management, and overall firm strategy, delivering pragmatic legal solutions aligned with business growth.',
     order: 1,
-    imageUrl: 'https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=2069&auto=format&fit=crop'
+    imageUrl: 'https://res.cloudinary.com/dul9xvvap/image/upload/fl_preserve_transparency/v1792880287/IMG-20230402-WA0067_goy8b2.jpg?_s=public-apps'
   },
   {
     id: 'advocate-1',
-    name: 'Sarah Maina',
-    role: 'Senior Associate',
-    credentials: 'LL.B Hons, Dip. KSL, Patent Agent',
-    bio: 'Sarah specializes in Intellectual Property and Cyber Law, helping clients navigate the digital legal landscape in Kenya.',
+    slug: 'michell_wambui',
+    name: 'Michell Wambui',
+    role: 'Associate Attorney',
+    credentials: 'LL.B Hons, Dip. KSL',
+    bio: 'Michell Wambui is a dynamic Associate Attorney dedicated to providing proactive legal support and strategic counsel across business and personal law matters. She works closely with senior partners to draft complex contracts, conduct legal research, and represent clients in dispute resolutions.',
     order: 2,
-    imageUrl: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=2076&auto=format&fit=crop'
+    imageUrl: '/images/Mitchell_Wambui.jpeg'
+  },
+  {
+    id: 'uagiqekdZicBWga2kjeW',
+    slug: 'priscilla_wanjiru',
+    name: 'Priscilla Wanjiru',
+    role: 'Office Manager',
+    credentials: 'Dip. Legal Studies & Administration',
+    bio: 'Priscilla Wanjiru oversees daily office operations, client intake, and administrative workflows to ensure the firm runs seamlessly. Serving as the primary point of contact for clients, she manages scheduling, client communications, and court filing coordination.',
+    order: 3,
+    imageUrl: '/images/Priscilla_Wanjiru.jpeg'
+  },
+  {
+    id: 'PLIXyHQdm4NbhRm4kvqJ',
+    slug: 'anthony_ndongu_chege',
+    name: 'Anthony Ndongu Chege',
+    role: 'Senior Partner',
+    credentials: 'LL.B Hons, Dip. KSL, Qualified Arbitrator',
+    bio: 'Anthony Ndongu Chege is a Senior Partner specializing in complex commercial transactions, regulatory strategy, and enterprise risk management. With years of proven leadership, he advises corporate clients, board executives, and investors on high-value deals.',
+    order: 4,
+    imageUrl: '/images/Anthony_Ndongu.jpeg'
   }
 ];
 
@@ -31,7 +53,7 @@ async function seedTeam() {
       createdAt: serverTimestamp(),
       updatedAt: serverTimestamp()
     });
-    console.log(`Seeded: ${member.name}`);
+    console.log(`Seeded: ${member.name} (${member.slug})`);
   }
   console.log('Team seeding complete.');
   process.exit(0);

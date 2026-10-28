@@ -45,17 +45,17 @@ export const PracticeAreasPage = () => {
   return (
     <div className="bg-brand-light min-h-screen">
       {/* Header */}
-      <section className="bg-brand-navy py-24 text-center">
+      <section className="bg-brand-navy pt-10 pb-12 md:pt-12 md:pb-14 text-center">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.h1 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-4xl md:text-6xl font-serif font-bold text-white mb-6"
+            className="text-4xl md:text-5xl font-serif font-bold text-white mb-4"
           >
             Our Legal Expertise
           </motion.h1>
-          <div className="w-24 h-1 bg-brand-gold mx-auto mb-6" />
-          <p className="text-white/70 max-w-2xl mx-auto text-lg">
+          <div className="w-20 h-1 bg-brand-gold mx-auto mb-4" />
+          <p className="text-white/70 max-w-2xl mx-auto text-base">
             Specialized legal solutions anchored in Kenyan law and international standards.
           </p>
         </div>

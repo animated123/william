@@ -18,7 +18,7 @@ import { AdminDashboard } from './pages/AdminDashboard';
 // --- Shared Layout Components ---
 
 const TopBar = () => (
-  <div className="bg-brand-light border-b border-gray-100 py-2 hidden lg:block">
+  <div className="bg-brand-light border-b border-gray-100 py-1.5 hidden lg:block">
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center text-[10px] uppercase tracking-widest text-brand-navy/60 font-bold">
       <div className="flex gap-8">
         <div className="flex items-center gap-2">
@@ -50,7 +50,7 @@ const Navbar = () => {
   const isAdminPage = location.pathname.startsWith('/admin');
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 50);
+    const handleScroll = () => setScrolled(window.scrollY > 30);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -69,16 +69,16 @@ const Navbar = () => {
   return (
     <>
       <TopBar />
-      <nav className={`sticky top-0 z-50 transition-all duration-300 ${
-        scrolled ? 'bg-white/95 backdrop-blur-md shadow-xl py-4' : 'bg-white py-6 border-b border-gray-100'
+      <nav className={`sticky top-0 z-50 transition-all duration-200 ${
+        scrolled ? 'bg-white/95 backdrop-blur-md shadow-md py-1.5' : 'bg-white py-2 border-b border-gray-100'
       }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center">
-            <Link to="/" className="flex items-center gap-3 group">
-              <img src="/images/favicon.png" alt="William & Co. Advocates" className="h-10 w-auto object-contain transition-transform group-hover:scale-105" />
+            <Link to="/" className="flex items-center gap-2.5 group">
+              <img src="/images/favicon.png" alt="William & Co. Advocates" className="h-9 w-auto object-contain transition-transform group-hover:scale-105" />
               <div className="flex flex-col">
-                <span className="text-2xl font-serif font-bold tracking-tight text-brand-gold uppercase leading-tight">William & Co.</span>
-                <span className="text-[10px] tracking-[0.4em] font-medium opacity-60 text-brand-blue">ADVOCATES</span>
+                <span className="text-xl font-serif font-bold tracking-tight text-brand-gold uppercase leading-tight">William & Co.</span>
+                <span className="text-[9px] tracking-[0.35em] font-medium opacity-60 text-brand-blue">ADVOCATES</span>
               </div>
             </Link>
             
@@ -183,7 +183,7 @@ export default function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/team" element={<TeamPage />} />
-            <Route path="/team/:id" element={<TeamMemberDetailPage />} />
+            <Route path="/team/:slug" element={<TeamMemberDetailPage />} />
             <Route path="/practice-areas" element={<PracticeAreasPage />} />
             <Route path="/practice-areas/:slug" element={<PracticeAreaDetailPage />} />
             <Route path="/book" element={<BookAppointmentPage />} />

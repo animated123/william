@@ -1,42 +1,84 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { db } from '../lib/firebase';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, collection, getDocs } from 'firebase/firestore';
 import { motion } from 'motion/react';
 import { Mail, Linkedin, ArrowLeft, Award, CheckCircle2, MapPin, Phone } from 'lucide-react';
-
-interface TeamMember {
-  id: string;
-  name: string;
-  role: string;
-  bio: string;
-  imageUrl: string;
-  credentials: string;
-  order: number;
-}
+import { getTeamSlug, normalizeSlug, DEFAULT_TEAM_MEMBERS, TeamMember } from '../lib/teamUtils';
 
 export const TeamMemberDetailPage = () => {
-  const { id } = useParams();
+  const { slug, id } = useParams();
+  const identifier = slug || id || '';
   const [member, setMember] = useState<TeamMember | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchMember = async () => {
-      if (!id) return;
+      if (!identifier) {
+        setLoading(false);
+        return;
+      }
+
+      const normalizedTarget = normalizeSlug(identifier);
+
       try {
-        const docRef = doc(db, 'team', id);
-        const snapshot = await getDoc(docRef);
-        if (snapshot.exists()) {
-          setMember({ id: snapshot.id, ...snapshot.data() } as TeamMember);
+        // 1. Fetch from Firestore team collection
+        const snapshot = await getDocs(collection(db, 'team'));
+        let found: TeamMember | null = null;
+
+        if (!snapshot.empty) {
+          const members = snapshot.docs.map(d => ({ id: d.id, ...d.data() } as TeamMember));
+          
+          // Match by explicit slug
+          found = members.find(m => m.slug && normalizeSlug(m.slug) === normalizedTarget) || null;
+          
+          // Match by getTeamSlug (name-based slug e.g. william_mbugua)
+          if (!found) {
+            found = members.find(m => normalizeSlug(getTeamSlug(m)) === normalizedTarget) || null;
+          }
+
+          // Match by document ID
+          if (!found) {
+            found = members.find(m => m.id === identifier || normalizeSlug(m.id) === normalizedTarget) || null;
+          }
+
+          // Match by partial name or known aliases
+          if (!found) {
+            found = members.find(m => {
+              const nameNorm = normalizeSlug(m.name);
+              return nameNorm === normalizedTarget ||
+                nameNorm.includes(normalizedTarget) ||
+                normalizedTarget.includes(nameNorm);
+            }) || null;
+          }
         }
+
+        // 2. Fallback to default team roster if not found in Firestore
+        if (!found) {
+          found = DEFAULT_TEAM_MEMBERS.find(m => 
+            normalizeSlug(m.slug || '') === normalizedTarget ||
+            normalizeSlug(getTeamSlug(m)) === normalizedTarget ||
+            m.id === identifier ||
+            normalizeSlug(m.name) === normalizedTarget
+          ) || null;
+        }
+
+        setMember(found);
       } catch (err) {
         console.error("Error fetching team member:", err);
+        // Fallback on error
+        const fallback = DEFAULT_TEAM_MEMBERS.find(m => 
+          normalizeSlug(m.slug || '') === normalizedTarget ||
+          normalizeSlug(getTeamSlug(m)) === normalizedTarget ||
+          m.id === identifier
+        ) || null;
+        setMember(fallback);
       } finally {
         setLoading(false);
       }
     };
     fetchMember();
-  }, [id]);
+  }, [identifier]);
 
   if (loading) return (
     <div className="min-h-screen flex items-center justify-center bg-brand-light">
@@ -54,9 +96,9 @@ export const TeamMemberDetailPage = () => {
   return (
     <div className="bg-white min-h-screen">
       {/* Breadcrumb / Back Button */}
-      <div className="bg-brand-navy pt-32 pb-12">
+      <div className="bg-brand-navy pt-8 pb-12 md:pt-10 md:pb-14">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <Link to="/team" className="inline-flex items-center gap-2 text-brand-gold font-bold text-xs uppercase tracking-widest hover:-translate-x-2 transition-transform mb-8">
+          <Link to="/team" className="inline-flex items-center gap-2 text-brand-gold font-bold text-xs uppercase tracking-widest hover:-translate-x-2 transition-transform mb-6">
             <ArrowLeft size={16} /> Back to Team
           </Link>
           <div className="flex flex-col md:flex-row gap-12 items-end">
@@ -103,12 +145,16 @@ export const TeamMemberDetailPage = () => {
                     <Award className="text-brand-gold" size={20} /> Qualifications
                   </h4>
                   <ul className="space-y-2">
-                    {member.credentials.split(',').map((cred, i) => (
-                      <li key={i} className="text-sm text-gray-500 flex items-start gap-2">
-                        <CheckCircle2 className="text-brand-blue shrink-0 mt-1" size={14} />
-                        {cred.trim()}
-                      </li>
-                    ))}
+                    {(member.credentials ? member.credentials.split(',') : [member.role, 'Practicing Advocate']).map((cred, i) => {
+                      const trimmed = cred.trim();
+                      if (!trimmed) return null;
+                      return (
+                        <li key={i} className="text-sm text-gray-500 flex items-start gap-2">
+                          <CheckCircle2 className="text-brand-blue shrink-0 mt-1" size={14} />
+                          {trimmed}
+                        </li>
+                      );
+                    })}
                   </ul>
                 </div>
                 <div className="p-8 bg-brand-light border-l-4 border-l-brand-gold space-y-4">
